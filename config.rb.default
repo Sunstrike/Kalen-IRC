@@ -1,0 +1,9 @@
+# Default Kalen config file
+
+SERVER = 'irc.esper.net'
+PORT = 6667
+NICK = 'Kalen'
+NS_ENABLED = false
+NS_PASSWORD = ''
+CHANNEL = ''
+POST_PORT = 9090
