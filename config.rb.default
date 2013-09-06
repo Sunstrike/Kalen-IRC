@@ -7,3 +7,6 @@ NS_ENABLED = false
 NS_PASSWORD = ''
 CHANNEL = ''
 POST_PORT = 9090
+REST_API = 'https://bamboo.example.com/rest/api/latest'
+REST_USERNAME = 'irc'
+REST_PASSWORD = 'password'

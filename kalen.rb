@@ -9,6 +9,7 @@ Daemons.run_proc('kalen.rb') do
   require 'sinatra/base'
   require 'ipaddr'
   require 'multi_json'
+  require 'net/http'
 
 # Listener
 
@@ -35,6 +36,7 @@ Daemons.run_proc('kalen.rb') do
         url = data['url']
         puts channel.inspect
         channel.msg "#{project}: #{devchannel} build #{version} pushed to Tanis: #{url}"
+        reportChangesForBuild(data)
       rescue Exception => e
         warn "Failed to send message: #{e.message}"
       end
@@ -50,6 +52,43 @@ Daemons.run_proc('kalen.rb') do
       ret
     end
 
+    def reportChangesForBuild(data)
+      channel = Channel(config[:channel])
+      msgs = getChangesFromREST(data['buildkey'])
+      msgs.each do |m|
+        channel.msg m
+      end
+    end
+
+    def getChangesFromREST(buildkey)
+      uri = URI("#{config[:api]}/result/#{buildkey}.json?expand=changes.change")
+      req = Net::HTTP::Get.new(uri)
+      req.basic_auth config[:user], config[:password]
+      res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https', :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
+        http.request(req)
+      end
+      if res.is_a?(Net::HTTPSuccess)
+        json = MultiJson.decode res.body
+        puts json.inspect
+
+        puts json['changes']
+        if json['changes']['size'] <= 0
+          matches = /.+>(.+)<\/a>/.match json['buildReason']
+          unless matches == nil
+            return ["This build appears to be a manual run by #{matches[1]}."]
+          else
+            return []
+          end
+        else
+          out = []
+          json['changes']['change'].each do |change|
+            puts change.inspect
+            out.push("[#{change['changesetId'][0..5]}] #{change['comment'].chomp}")
+          end
+          return out
+        end
+      end
+    end
 
   end
 
@@ -86,7 +125,10 @@ Daemons.run_proc('kalen.rb') do
       end
       c.plugins.options[POSTListener] = {
           :port => POST_PORT,
-          :channel => CHANNEL
+          :channel => CHANNEL,
+          :api => REST_API,
+          :user => REST_USERNAME,
+          :password => REST_PASSWORD
       }
     end
   end
