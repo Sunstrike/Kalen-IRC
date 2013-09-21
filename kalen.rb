@@ -116,6 +116,7 @@ Daemons.run_proc('kalen.rb') do
       c.channels = [CHANNEL]
       c.plugins.plugins = plugins
       c.messages_per_second = 5
+      c.local_host = "0.0.0.0"
       if NS_ENABLED
         c.plugins.options[Cinch::Plugins::Identify] = {
             :username => NICK,
