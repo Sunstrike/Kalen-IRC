@@ -20,7 +20,8 @@ Daemons.run_proc('kalen.rb') do
     @@start_messages = ["\#@build@: On your marks, get set, build!",
                         "\#@build@: Building... with blocks.",
                         "\#@build@: Starting build. If it's broken, blame the person sitting next to me.",
-                        "\#@build@: <press any key to build>"]
+                        "\#@build@: <press any key to build>",
+                        "\#@build@: Starting build. What, you expected me to say something witty?"]
     @@success_messages = ["@project@ (@channel@): All your build @version@ are belong to @link@",
                           "@project@ (@channel@): I'MA FIRING MY LAZOR!!! @version@ @link@",
                           "@project@ (@channel@): Build @version@ completed. What else did you want? @link@",
@@ -195,7 +196,19 @@ Daemons.run_proc('kalen.rb') do
 
 # END Listener
 
-  plugins = [Cinch::Plugins::Identify, POSTListener]
+# START !messages
+  class MessagesCommand
+    include Cinch::Plugin
+
+    match /messages?/i, {:method => :messages}
+
+    def messages(msg)
+      msg.reply("Give us more build messages! http://goo.gl/639t7S")
+    end
+  end
+# END !messages
+
+  plugins = [Cinch::Plugins::Identify, POSTListener, MessagesCommand]
 
   bot = Cinch::Bot.new do
     configure do |c|
