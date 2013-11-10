@@ -28,7 +28,6 @@ Daemons.run_proc('kalen.rb') do
                         "@project@ \#@build@: Starting build. If it's broken, blame Sunstrike.",
                         "@project@ \#@build@: Starting build. If it's broken, blame mDiyo.",
                         "@project@ \#@build@: Starting build. If it's broken, blame fuj1n.",
-                        "@project@ \#@build@: Starting build. If it's broken, blame progwml6.",
                         "@project@ \#@build@: Starting build. If it's broken, blame Soaryn.",
                         "@project@ \#@build@: Starting build. If it's broken, blame Direwolf. Somehow. How does that work anyway?",
                         "@project@ \#@build@: For the love of builds, remember the fish!",
