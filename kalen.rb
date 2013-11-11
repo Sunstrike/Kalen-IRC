@@ -26,6 +26,7 @@ Daemons.run_proc('kalen.rb') do
                         "@project@ \#@build@: Tab A into Slot B? Where's Slot B?!",
                         "@project@ \#@build@: Prepare the smelteries!",
                         "@project@ \#@build@: Starting build. If it's broken, blame Sun.",
+                        "@project@ \#@build@: Starting build. If it's broken, blame Sun- no, Oracle!",
                         "@project@ \#@build@: Starting build. If it's broken, blame Diyo.",
                         "@project@ \#@build@: Starting build. If it's broken, blame fudgy.",
                         "@project@ \#@build@: Starting build. If it's broken, blame Soaryn.",
