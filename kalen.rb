@@ -89,7 +89,8 @@ Daemons.run_proc('kalen.rb') do
                           "@project@ build \#@build@: `git blame Direwolf`",
                           "@project@ build \#@build@: prog broke the build again! :<",
                           "@project@ build \#@build@: Alright who did it? WHO BROKE THE BUILD NOW!?",
-                          "(@project@) Cleanup on aisle @build@..."]
+                          "(@project@) Cleanup on aisle @build@...",
+                          "@project@ build \#@build@: Vex was here."]
 
     def initialize(bot)
       super bot
