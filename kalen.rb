@@ -92,6 +92,11 @@ Daemons.run_proc('kalen.rb') do
                           "(@project@) Cleanup on aisle @build@...",
                           "@project@ build \#@build@: Vex was here."]
 
+    @@commitless_messages = ["@project@ (@channel@): I herd you liek weird deploys. @version@, @link@",
+                             "@project@ (@channel@): I'm Kalen, and I'm not a Mac or PC - This... Is... LINUX! *sparta-kicks @version@ into @link@*",
+                             "@project@ (@channel@): The cookie monster was here. @version@, @link@",
+                             "@project@ (@channel@): Don't mind the explosions, I'm sure @version@ is perfectly behaved back there... @link@"]
+
     def initialize(bot)
       super bot
 
@@ -110,7 +115,6 @@ Daemons.run_proc('kalen.rb') do
         version = data['version']
         url = Googl.shorten(data['url']).short_url
 
-        #channel.msg "#{project}: #{devchannel} build #{version} pushed to Tanis: #{url}"
         channel.msg @@success_messages.sample.gsub("@project@", project).gsub("@channel@", devchannel).gsub("@version@", version).gsub("@link@", url)
         reportChangesForBuild(data)
       rescue Exception => e
@@ -144,6 +148,20 @@ Daemons.run_proc('kalen.rb') do
       end
     end
 
+    def report_commitless(data)
+      begin
+        channel = Channel(config[:channel])
+        project = data['project']
+        devchannel = data['channel']
+        version = data['version']
+        url = Googl.shorten(data['url']).short_url
+
+        channel.msg @@commitless_messages.sample.gsub("@project@", project).gsub("@channel@", devchannel).gsub("@version@", version).gsub("@link@", url)
+      rescue Exception => e
+        warn "Failed to send message: #{e.message}"
+      end
+    end
+
     def handle(req, payload)
       ret = 200
       begin
@@ -170,6 +188,16 @@ Daemons.run_proc('kalen.rb') do
         data = MultiJson.decode payload
         info "Got POST from build-fail endpoint: #{data.inspect}"
         report_fail(data)
+      end
+      ret
+    end
+
+    def handle_commitless(req, payload)
+      ret = 200
+      begin
+        data = MultiJson.decode payload
+        info "Got POST from build-commitless endpoint: #{data.inspect}"
+        report_commitless(data)
       end
       ret
     end
@@ -229,6 +257,10 @@ Daemons.run_proc('kalen.rb') do
 
     post '/build-fail' do
       settings.controller.handle_fail(request, params[:payload])
+    end
+
+    post '/build-commitless' do
+      settings.controller.handle_commitless(request, params[:payload])
     end
   end
 
