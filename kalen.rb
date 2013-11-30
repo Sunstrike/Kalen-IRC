@@ -98,7 +98,7 @@ Daemons.run_proc('kalen.rb') do
                              "@project@ (@channel@): Don't mind the explosions, I'm sure @version@ is perfectly behaved back there... @link@"]
 
     @@hidden_messages = ["@project@ (@channel@): Pssst. @version@ is a secret!",
-                         "@project@ (@channel@): Hey, @version, give me a link :<",
+                         "@project@ (@channel@): Hey, @version@, give me a link :<",
                          "@project@ (@channel@): @version@ is trapped under an NDA.",
                          "@project@ (@channel@): @version@ was here, stealing all the builds.",
                          "@project@ (@channel@): Wtf is this shit? @version@",
