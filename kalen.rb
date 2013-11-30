@@ -97,6 +97,14 @@ Daemons.run_proc('kalen.rb') do
                              "@project@ (@channel@): The cookie monster was here. @version@, @link@",
                              "@project@ (@channel@): Don't mind the explosions, I'm sure @version@ is perfectly behaved back there... @link@"]
 
+    @@hidden_messages = ["@project@ (@channel@): Pssst. @version@ is a secret!",
+                         "@project@ (@channel@): Hey, @version, give me a link :<",
+                         "@project@ (@channel@): @version@ is trapped under an NDA.",
+                         "@project@ (@channel@): @version@ was here, stealing all the builds.",
+                         "@project@ (@channel@): Wtf is this shit? @version@",
+                         "@project@ (@channel@): Hey, hey! Hey listen! @version@",
+                         "@project@ (@channel@): I was talking to Aeon yesterday about @version@. Boring-ass Maven server."]
+
     def initialize(bot)
       super bot
 
@@ -162,6 +170,20 @@ Daemons.run_proc('kalen.rb') do
       end
     end
 
+    def report_hidden(data)
+      begin
+        channel = Channel(config[:channel])
+        project = data['project']
+        devchannel = data['channel']
+        version = data['version']
+
+        channel.msg @@hidden_messages.sample.gsub("@project@", project).gsub("@channel@", devchannel).gsub("@version@", version)
+        reportChangesForBuild(data)
+      rescue Exception => e
+        warn "Failed to send message: #{e.message}"
+      end
+    end
+
     def handle(req, payload)
       ret = 200
       begin
@@ -198,6 +220,16 @@ Daemons.run_proc('kalen.rb') do
         data = MultiJson.decode payload
         info "Got POST from build-commitless endpoint: #{data.inspect}"
         report_commitless(data)
+      end
+      ret
+    end
+
+    def handle_hidden(req, payload)
+      ret = 200
+      begin
+        data = MultiJson.decode payload
+        info "Got POST from build-hidden endpoint: #{data.inspect}"
+        report_hidden(data)
       end
       ret
     end
@@ -261,6 +293,10 @@ Daemons.run_proc('kalen.rb') do
 
     post '/build-commitless' do
       settings.controller.handle_commitless(request, params[:payload])
+    end
+
+    post '/build-hidden' do
+      settings.controller.handle_hidden(request, params[:payload])
     end
   end
 
