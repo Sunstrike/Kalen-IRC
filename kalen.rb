@@ -103,7 +103,8 @@ Daemons.run_proc('kalen.rb') do
                          "@project@ (@channel@): @version@ was here, stealing all the builds.",
                          "@project@ (@channel@): Wtf is this shit? @version@",
                          "@project@ (@channel@): Hey, hey! Hey listen! @version@",
-                         "@project@ (@channel@): I was talking to Aeon yesterday about @version@. Boring-ass Maven server."]
+                         "@project@ (@channel@): I was talking to Aeon yesterday about @version@. Boring-ass Maven server.",
+                         "@project@ (@channel@): Halibut. Wait, you wanted @version@?"]
 
     def initialize(bot)
       super bot
